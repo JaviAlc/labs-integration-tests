@@ -1,0 +1,434 @@
+openapi: 3.0.2
+info:
+  title: User API
+  description: Api for user management. It allows to register, login and search users.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8180
+  - url: https://api.example.com
+tags:
+  - name: User
+    description: User management
+  - name: Auth
+    description: Authentication
+  - name: Shop
+    description: Shop management
+paths:
+  /authentication/v1/register:
+    post:
+      tags:
+        - Auth
+      operationId: registerUser
+      summary:  Registrar un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '204':
+          description: Usuario registrado exitosamente
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /authentication/v1/login:
+    post:
+      tags:
+        - Auth
+      operationId: login
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: Inicio de sesión exitoso
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /public/api/v1/users:
+    get:
+      tags:
+        - User
+      operationId: getUsers
+      summary: Buscar usuarios
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/shop/v1/products/add:
+    post:
+      tags:
+        - Shop
+      operationId: addProduct
+      summary: Add a product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Product added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bag'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/shop/v1/bag:
+    get:
+      tags:
+        - Shop
+      operationId: getBag
+      summary: Get the bag
+      responses:
+        '200':
+          description: Bag retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bag'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /api/shop/v1/purchases:
+    get:
+      tags:
+        - Shop
+      operationId: getPurchases
+      summary: get the purchase history
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseHistory'
+      responses:
+        '200':
+          description: Purchase completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purchase'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Login:
+      title: Login
+      type: object
+      description: Login request object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          maxLength: 100
+        password:
+          type: string
+          minLength: 8
+          maxLength: 12
+
+    LoginResponse:
+        title: LoginResponse
+        type: object
+        description: Login response object
+        required:
+            - token
+        properties:
+          token:
+            type: string
+            maxLength: 100
+
+
+    UserRequest:
+      title: UserRequest
+      type: object
+      description: User request object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          maxLength: 100
+        name:
+          type: string
+          maxLength: 100
+        password:
+          type: string
+          minLength: 8
+          maxLength: 12
+
+    User:
+      title: User
+      type: object
+      description: User object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+      required:
+        - username
+        - email
+
+    UserList:
+      title: UserList
+      description: List of users
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+
+    Error:
+      title: Error
+      type: object
+      description: Error object
+      required:
+        - httpCode
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          minimum: 1
+          maximum: 999
+        code:
+          type: string
+          example: 'ERR-001'
+        message:
+          type: string
+          maxLength: 10000
+          example: 'Error message'
+
+    BadRequest:
+      title: BadRequest
+      description: Bad request
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        status: 400
+        code: 'ERR-001'
+        message:  Bad request, please check data sent in the request.
+
+    Unauthorized:
+      title: Unauthorized
+      description: Unauthorized
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        status: 401
+        code: 'ERR-001'
+        message: Invalid credentials provided
+
+    Forbidden:
+      title: Forbidden
+      description: Forbidden
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        status: 403
+        code: 'ERR-001'
+        message: You have not access to this resource
+
+    NotFound:
+      title: NotFound
+      description: Not found
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        status: 404
+        code: 'ERR-001'
+        message: The requested resource was not found
+
+    Conflict:
+      title: Conflict
+      description: Conflict
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        status: 409
+        code: 'ERR-001'
+        message: The requested resource already exists
+
+    InternalServerError:
+      title: InternalServerError
+      description: Internal server error
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        status: 500
+        code: 'ERR-001'
+        message: Internal server error
+
+    Product:
+      title: Product
+      type: object
+      description: Product object
+      properties:
+        name:
+          type: string
+          maxLength: 500
+        price:
+          type: number
+          format: double
+          minimum: 0
+      required:
+        - name
+        - price
+
+    Bag:
+      title: Bag
+      type: object
+      description: Bag object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+          minItems: 1
+          maxItems: 10
+        total:
+          type: number
+          format: double
+          minimum: 0
+      required:
+        - products
+        - total
+
+    Purchase:
+      title: Purchase
+      type: object
+      description: purchase object
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+          format: date-time
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+          minItems: 1
+          maxItems: 10
+        total:
+          type: number
+          format: double
+          minimum: 0
+      required:
+        - products
+        - total
+
+    PurchaseHistory:
+      title: PurchaseHistory
+      description: List of purchases
+      type: array
+      items:
+        $ref: '#/components/schemas/Purchase'
