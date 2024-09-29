@@ -2,6 +2,7 @@ package io.github.javialc.java.labs.controller;
 
 import io.github.javialc.java.labs.api.AuthApi;
 import io.github.javialc.java.labs.api.model.LoginDto;
+import io.github.javialc.java.labs.api.model.LoginResponseDto;
 import io.github.javialc.java.labs.api.model.UserRequestDto;
 import io.github.javialc.java.labs.domain.model.LoginRequest;
 import io.github.javialc.java.labs.domain.model.LoginResponse;
@@ -17,20 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @Slf4j
-public class AuthController implements AuthApi{
+public class AuthController implements AuthApi {
 
 
     private final CreateNewUserUseCase createNewUserUseCase;
     private final LoginUseCase loginUseCase;
     private AuthMapper authMapper;
 
-    @Override
-    public ResponseEntity<Void> login(LoginDto loginDto) {
 
+    @Override
+    public ResponseEntity<LoginResponseDto> login(LoginDto loginDto) {
         LoginRequest loginRequest = authMapper.toLoginRequest(loginDto);
         LoginResponse loginResponse = loginUseCase.login(loginRequest);
         log.info("Login response: {}", loginResponse);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(authMapper.toLoginResponseDto(loginResponse));
     }
 
     @Override

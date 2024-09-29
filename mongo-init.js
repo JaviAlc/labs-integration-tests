@@ -6,8 +6,11 @@ db.createUser({
     roles: [{ role: "readWrite", db: "integrationtest-db" }]
 });
 
-db.mycollection.insertMany([
-    { name: "item1", value: 100 },
-    { name: "item2", value: 200 },
-    { name: "item3", value: 300 }
+db.auth_users.insertMany([
+    { email: "test@mail.com", password: "password1" }
+]);
+
+
+db.users.insertMany([
+    { email: "test@mail.com", password: "password1" }
 ]);

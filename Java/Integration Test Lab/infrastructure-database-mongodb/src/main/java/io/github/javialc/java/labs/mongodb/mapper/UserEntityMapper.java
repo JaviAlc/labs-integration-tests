@@ -11,7 +11,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {
 
-    UserEntity toEntity(UserRequest userEntity);
+    UserEntity toEntity(UserRequest userRequest);
+
+    UserEntity toEntity(User user);
 
     @Mapping(target = "id", source = "id")
     UserEntity toEntity(String id, UserRequest userEntity);

@@ -19,7 +19,7 @@ paths:
       tags:
         - Auth
       operationId: registerUser
-      summary:  Registrar un nuevo usuario
+      summary: Registrar un nuevo usuario
       requestBody:
         required: true
         content:
@@ -28,7 +28,7 @@ paths:
               $ref: '#/components/schemas/UserRequest'
       responses:
         '204':
-          description: Usuario registrado exitosamente
+          description: User registered successfully
         '400':
           description: Bad request
           content:
@@ -47,6 +47,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /authentication/v1/login:
     post:
       tags:
@@ -61,7 +62,11 @@ paths:
               $ref: '#/components/schemas/Login'
       responses:
         '200':
-          description: Inicio de sesión exitoso
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
         '401':
           description: Unauthorized
           content:
@@ -80,6 +85,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /public/api/v1/users:
     get:
       tags:
@@ -112,7 +118,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/shop/v1/products/add:
+  /api/shop/v1/products:
     post:
       tags:
         - Shop
@@ -131,6 +137,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Bag'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
         '404':
           description: Not found
           content:
@@ -150,7 +168,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/shop/v1/bag:
+  /api/shop/v1/bags:
     get:
       tags:
         - Shop
@@ -163,6 +181,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Bag'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
         '404':
           description: Not found
           content:
@@ -176,18 +206,108 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
 
+  /api/shop/v1/bags/buy:
+    post:
+      tags:
+        - Shop
+      operationId: buyBag
+      summary: Buy the bag
+      responses:
+        '202':
+          description: Bag bought successfully
+          headers:
+            Location:
+              description: Location of the purchase
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /api/shop/v1/purchases:
     get:
       tags:
         - Shop
       operationId: getPurchases
       summary: get the purchase history
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PurchaseHistory'
+      responses:
+        '200':
+          description: Purchase completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseHistory'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/shop/v1/purchases/{id}:
+    get:
+      tags:
+        - Shop
+      operationId: getPurchase
+      summary: get the purchase
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Purchase id
+          schema:
+            type: string
       responses:
         '200':
           description: Purchase completed successfully
@@ -195,6 +315,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Purchase'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
         '404':
           description: Not found
           content:
@@ -233,15 +365,15 @@ components:
           maxLength: 12
 
     LoginResponse:
-        title: LoginResponse
-        type: object
-        description: Login response object
-        required:
-            - token
-        properties:
-          token:
-            type: string
-            maxLength: 100
+      title: LoginResponse
+      type: object
+      description: Login response object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          maxLength: 100
 
 
     UserRequest:
@@ -315,7 +447,7 @@ components:
       example:
         status: 400
         code: 'ERR-001'
-        message:  Bad request, please check data sent in the request.
+        message: Bad request, please check data sent in the request.
 
     Unauthorized:
       title: Unauthorized
@@ -422,6 +554,12 @@ components:
           type: number
           format: double
           minimum: 0
+        status:
+          type: string
+          enum:
+            - PENDING
+            - COMPLETED
+            - CANCELLED
       required:
         - products
         - total

@@ -43,10 +43,16 @@ public class UserRepositoryMongoImpl implements UserRepository {
     }
 
     @Override
-    public void update(final String id,final UserRequest user) {
+    public void update(final String id, final UserRequest user) {
         if (userJpaRepository.existsById(id)) {
             final UserEntity userEntity = userEntityMapper.toEntity(id, user);
             userJpaRepository.save(userEntity);
         }
+    }
+
+    @Override
+    public void save(User user) {
+        final UserEntity userEntity = userEntityMapper.toEntity(user);
+        userJpaRepository.save(userEntity);
     }
 }
