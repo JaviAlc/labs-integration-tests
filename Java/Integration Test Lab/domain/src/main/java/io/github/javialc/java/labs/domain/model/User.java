@@ -16,5 +16,5 @@ public class User {
     private String name;
     private String email;
     private Bag bag;
-    private final List<Purchase> purchases = new ArrayList<>();
+    private final List<Purchase> purchases;
 }

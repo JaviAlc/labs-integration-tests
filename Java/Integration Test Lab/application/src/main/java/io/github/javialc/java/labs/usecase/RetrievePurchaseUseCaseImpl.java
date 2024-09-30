@@ -19,7 +19,11 @@ public class RetrievePurchaseUseCaseImpl implements RetrievePurchaseUseCase {
     @Override
     public Purchase retrievePurchase(final String id) {
         String email = authorizationServiceUtils.getCurrentUsername();
-
-        return null;
+        log.info("Retrieving purchase for user {}", email);
+        return userRepository.findByEmail(email).filter(user -> user.getPurchases() != null)
+                .map(user -> user.getPurchases().stream()
+                    .filter(purchase -> purchase.id().equals(id)).findFirst())
+                .flatMap(purchase -> purchase)
+                .orElseThrow(() -> new IllegalArgumentException("Purchase not found"));
     }
 }

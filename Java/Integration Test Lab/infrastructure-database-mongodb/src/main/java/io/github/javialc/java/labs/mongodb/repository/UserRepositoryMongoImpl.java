@@ -34,7 +34,8 @@ public class UserRepositoryMongoImpl implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return userJpaRepository.findByEmail(email).map(userEntityMapper::toDomain);
+        return userJpaRepository.findByEmail(email)
+            .map(userEntityMapper::toDomain);
     }
 
     @Override

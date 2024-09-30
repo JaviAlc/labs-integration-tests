@@ -22,7 +22,7 @@ public class JwtTokenProvider {
             .withSubject(email)
             .withIssuer("auth0")
             .withIssuedAt(new Date())
-            .withExpiresAt(new Date(System.currentTimeMillis() + 360000)) // 1 hour
+            .withExpiresAt(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
             .sign(getAlgorithm());
 
     }

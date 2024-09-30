@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "users")
@@ -23,6 +24,6 @@ public class UserEntity {
 
     @Builder.Default
     private BagVO bag = new BagVO(List.of(), 0.0);
-    private List<PurchaseVO> purchases;
+    private List<PurchaseVO> purchases=new ArrayList<>();
 
 }
