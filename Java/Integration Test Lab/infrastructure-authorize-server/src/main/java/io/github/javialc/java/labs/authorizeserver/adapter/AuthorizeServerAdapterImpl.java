@@ -4,7 +4,7 @@ import io.github.javialc.java.labs.authorizeserver.entity.AuthUserEntity;
 import io.github.javialc.java.labs.authorizeserver.jpa.AuthUserJpaRepository;
 import io.github.javialc.java.labs.authorizeserver.provider.JwtTokenProvider;
 import io.github.javialc.java.labs.domain.adapters.AuthorizeServerAdapter;
-import io.github.javialc.java.labs.domain.model.LdapAuthResponse;
+import io.github.javialc.java.labs.domain.model.authorization.LdapAuthResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -51,5 +51,11 @@ public class AuthorizeServerAdapterImpl implements AuthorizeServerAdapter {
     public boolean validateToken(final String token) {
         log.info("Validating token: {}", token);
         return jwtTokenProvider.validateToken(token);
+    }
+
+    @Override
+    public void delete(final String email) {
+        log.info("Deleting user with email: {}", email);
+        authUserJpaRepository.deleteByEmail(email);
     }
 }

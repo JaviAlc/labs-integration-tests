@@ -1,4 +1,4 @@
-package io.github.javialc.java.labs.usecase;
+package io.github.javialc.java.labs.usecase.shop;
 
 import io.github.javialc.java.labs.domain.error.UserNotFoundException;
 import io.github.javialc.java.labs.domain.model.User;

@@ -1,4 +1,4 @@
-package io.github.javialc.java.labs.usecase;
+package io.github.javialc.java.labs.usecase.shop;
 
 import io.github.javialc.java.labs.domain.error.UserNotFoundException;
 import io.github.javialc.java.labs.domain.model.User;
@@ -24,9 +24,9 @@ public class RetrieveBagUseCaseImpl implements RetrieveBagUseCase {
         String email = authorizationServiceUtils.getCurrentUsername();
         log.info("Retrieving bag for user with email: {}", email);
         return userRepository.findByEmail(email).map(User::getBag)
-                .orElseThrow(() -> {
-                    log.error("User with email: {} not found", email);
-                    return new UserNotFoundException("USER_NOT_FOUND", "User not found", null);
-                });
+            .orElseThrow(() -> {
+                log.error("User with email: {} not found", email);
+                return new UserNotFoundException("USER_NOT_FOUND", "User not found", null);
+            });
     }
 }

@@ -1,6 +1,6 @@
 package io.github.javialc.java.labs.domain.adapters;
 
-import io.github.javialc.java.labs.domain.model.LdapAuthResponse;
+import io.github.javialc.java.labs.domain.model.authorization.LdapAuthResponse;
 
 public interface AuthorizeServerAdapter {
 
@@ -13,4 +13,5 @@ public interface AuthorizeServerAdapter {
 
     boolean validateToken(String token);
 
+    void delete(String email);
 }

@@ -1,4 +1,4 @@
-package io.github.javialc.java.labs.domain.usecase;
+package io.github.javialc.java.labs.domain.usecase.authorization;
 
 import io.github.javialc.java.labs.domain.model.UserRequest;
 

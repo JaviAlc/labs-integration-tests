@@ -1,0 +1,912 @@
+{
+	"info": {
+		"_postman_id": "e580b30a-7ea4-4cad-a309-b13e4442e17d",
+		"name": "Integration-Test: Smoke Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9142603"
+	},
+	"item": [
+		{
+			"name": "Login without register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 401\", function () {",
+							"  pm.expect(pm.response.code).to.equal(401);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body contains status, code, and message properties\", function () {",
+							"    var responseJSON = pm.response.json();",
+							"    pm.expect(responseJSON).to.have.property('status');",
+							"    pm.expect(responseJSON).to.have.property('code');",
+							"    pm.expect(responseJSON).to.have.property('message');",
+							"});",
+							"",
+							"pm.test(\"Check body response values\", function(){",
+							"    var responseJSON = pm.response.json();",
+							"    pm.expect(responseJSON['status']).to.eq(401)",
+							"    pm.expect(responseJSON['code']).to.eq('AUTHENTICATION_ERROR')",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var userName = \"smoketest-user-\" + Math.random().toString(36).substring(2, 15);",
+							"var email = userName + \"@mailinator.com\";",
+							"var password = \"1234567890\";",
+							"",
+							"pm.collectionVariables.set(\"SmokeTestName\", userName);",
+							"pm.collectionVariables.set(\"SmokeTesEmail\", email);",
+							"pm.collectionVariables.set(\"SmokeTestPassword\", password);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{SmokeTesEmail}}\",\n    \"password\": \"{{SmokeTestPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/authentication/v1/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"authentication",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{SmokeTestName}}\",\n    \"email\": \"{{SmokeTesEmail}}\",\n    \"password\": \"{{SmokeTestPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/authentication/v1/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"authentication",
+						"v1",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.token).to.exist;",
+							"});",
+							"",
+							"",
+							"// Stores the token from the response in a global variable",
+							"var responseBody = pm.response.json();",
+							"pm.environment.set(\"token\", responseBody.token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{SmokeTesEmail}}\",\n    \"password\": \"{{SmokeTestPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/authentication/v1/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"authentication",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Bag empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - products and total\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('products');",
+							"    pm.expect(responseData).to.have.property('total');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Products is an array and total is a number\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.products).to.be.an('array');",
+							"  pm.expect(responseData.total).to.be.a('number');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Products array is empty and total value is 0\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.products).to.have.lengthOf(0, \"Products array should be empty\");",
+							"  pm.expect(responseData.total).to.equal(0, \"Total value should be 0\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/shop/v1/bags",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"shop",
+						"v1",
+						"bags"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ADD product 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - name and price\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.products).to.be.an('array');",
+							"",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product.name).to.exist.and.to.be.a('string');",
+							"        pm.expect(product.price).to.exist.and.to.be.a('number');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Name is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Price is a non-negative number\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product.price).to.be.a('number').and.to.be.at.least(0);",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Product 1\",\n    \"price\": 12.35\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/shop/v1/products",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"shop",
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ADD product 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is within an acceptable range\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - name and price\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.products).to.be.an('array');",
+							"    ",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product).to.have.property('name');",
+							"        pm.expect(product.name).to.be.a('string');",
+							"        ",
+							"        pm.expect(product).to.have.property('price');",
+							"        pm.expect(product.price).to.be.a('number');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Price is a non-negative number\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData.products).to.be.an('array');",
+							"  responseData.products.forEach(function(product) {",
+							"    pm.expect(product.price).to.be.a('number').and.to.be.at.least(0);",
+							"  });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Total is a non-negative number\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.total).to.be.a('number').and.to.be.at.least(0);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Product 2\",\n    \"price\": 29.95\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/shop/v1/products",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"shop",
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Bag with products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - name and price\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.products).to.be.an('array');",
+							"    ",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product).to.have.property('name');",
+							"        pm.expect(product).to.have.property('price');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Price is a non-negative number\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    responseData.products.forEach(product => {",
+							"        pm.expect(product.price).to.be.a('number').and.to.be.at.least(0);",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Total is a non-negative number\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.total).to.be.a('number');",
+							"  pm.expect(responseData.total).to.be.at.least(0);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/shop/v1/bags",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"shop",
+						"v1",
+						"bags"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BUY Bag",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test for the response status code",
+							"pm.test(\"Response status code is 202\", function () {",
+							"  pm.response.to.have.status(202);",
+							"});",
+							"",
+							"// Test for the 'Location' header in the response",
+							"pm.test(\"Response contains 'Location' header\", function () {",
+							"  pm.expect(pm.response.headers.has('Location')).to.be.true;",
+							"});",
+							"",
+							"// Get Location from Header",
+							"var location = pm.response.headers.get('Location')",
+							"pm.environment.set(\"purchaseLocation\", location);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/shop/v1/bags/buy",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"shop",
+						"v1",
+						"bags",
+						"buy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET purchase location",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the response schema\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.id).to.exist.and.to.be.a('string');",
+							"    pm.expect(responseData.date).to.exist.and.to.be.a('string');",
+							"    pm.expect(responseData.products).to.exist.and.to.be.an('array');",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product.name).to.exist.and.to.be.a('string');",
+							"        pm.expect(product.price).to.exist.and.to.be.a('number');",
+							"    });",
+							"    pm.expect(responseData.total).to.exist.and.to.be.a('number');",
+							"    pm.expect(responseData.status).to.exist.and.to.be.a('string');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Products array contains expected elements - name and price\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.products).to.be.an('array').and.to.have.lengthOf.at.least(1);",
+							"    ",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product).to.have.property('name').that.is.a('string');",
+							"        pm.expect(product).to.have.property('price').that.is.a('number');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Total is a non-negative integer\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.total).to.be.a('number');",
+							"  pm.expect(responseData.total).to.be.at.least(0, \"Total should be a non-negative integer\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}{{purchaseLocation}}",
+					"host": [
+						"{{host}}{{purchaseLocation}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Bag empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - products and total\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('products');",
+							"    pm.expect(responseData).to.have.property('total');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Products is an array and total is a number\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.products).to.be.an('array');",
+							"  pm.expect(responseData.total).to.be.a('number');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Products array is empty and total value is 0\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.products).to.have.lengthOf(0, \"Products array should be empty\");",
+							"  pm.expect(responseData.total).to.equal(0, \"Total value should be 0\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/shop/v1/bags",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"shop",
+						"v1",
+						"bags"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET purchases",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - id, date, products, total, and status\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(function(purchase) {",
+							"        pm.expect(purchase).to.be.an('object');",
+							"        pm.expect(purchase.id).to.exist;",
+							"        pm.expect(purchase.date).to.exist;",
+							"        pm.expect(purchase.products).to.exist;",
+							"        pm.expect(purchase.total).to.exist;",
+							"        pm.expect(purchase.status).to.exist;",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Price is a non-negative number\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('array');",
+							"  responseData.forEach(purchase => {",
+							"    pm.expect(purchase.products).to.be.an('array');",
+							"    purchase.products.forEach(product => {",
+							"      pm.expect(product.price).to.be.a('number').and.to.be.at.least(0, \"Price should be a non-negative number\");",
+							"    });",
+							"  });",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/shop/v1/purchases",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"shop",
+						"v1",
+						"purchases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 204\", function () {",
+							"  pm.response.to.have.status(204);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Absence of content in the response body\", function () {",
+							"    pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/public/api/v1/users/:email",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"public",
+						"api",
+						"v1",
+						"users",
+						":email"
+					],
+					"variable": [
+						{
+							"key": "email",
+							"value": "{{SmokeTesEmail}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login deleted user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 401\", function () {",
+							"  pm.expect(pm.response.code).to.equal(401);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body contains status, code, and message properties\", function () {",
+							"    var responseJSON = pm.response.json();",
+							"    pm.expect(responseJSON).to.have.property('status');",
+							"    pm.expect(responseJSON).to.have.property('code');",
+							"    pm.expect(responseJSON).to.have.property('message');",
+							"});",
+							"",
+							"pm.test(\"Check body response values\", function(){",
+							"    var responseJSON = pm.response.json();",
+							"    pm.expect(responseJSON['status']).to.eq(401)",
+							"    pm.expect(responseJSON['code']).to.eq('AUTHENTICATION_ERROR')",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var userName = \"smoketest-user-\" + Math.random().toString(36).substring(2, 15);",
+							"var email = userName + \"@mailinator.com\";",
+							"var password = \"1234567890\";",
+							"",
+							"pm.collectionVariables.set(\"SmokeTestName\", userName);",
+							"pm.collectionVariables.set(\"SmokeTesEmail\", email);",
+							"pm.collectionVariables.set(\"SmokeTestPassword\", password);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{SmokeTesEmail}}\",\n    \"password\": \"{{SmokeTestPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/authentication/v1/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"authentication",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "SmokeTestName",
+			"value": ""
+		},
+		{
+			"key": "SmokeTesEmail",
+			"value": ""
+		},
+		{
+			"key": "SmokeTestPassword",
+			"value": ""
+		}
+	]
+}

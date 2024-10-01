@@ -1,8 +1,8 @@
-package io.github.javialc.java.labs.usecase;
+package io.github.javialc.java.labs.usecase.users;
 
 import io.github.javialc.java.labs.domain.model.User;
 import io.github.javialc.java.labs.domain.repository.UserRepository;
-import io.github.javialc.java.labs.domain.usecase.FindUsersUseCase;
+import io.github.javialc.java.labs.domain.usecase.users.FindUsersUseCase;
 import io.github.javialc.java.labs.domain.utils.RequestSource;
 import io.github.javialc.java.labs.domain.utils.RequestSourceContextHolder;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 @Slf4j
-public class FindUserUseCaseImpl implements FindUsersUseCase {
+public class FindUsersUseCaseImpl implements FindUsersUseCase {
 
     private final UserRepository userRepository;
 

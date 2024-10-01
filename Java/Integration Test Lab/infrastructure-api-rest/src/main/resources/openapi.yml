@@ -99,12 +99,75 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserList'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  /public/api/v1/users/{email}:
+    get:
+      tags:
+        - User
+      operationId: getUser
+      summary: Find user by email
+      parameters:
+        - name: email
+          in: path
+          required: true
+          description: User email
+          schema:
+            type: string
+            pattern: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+      responses:
+        '200':
+          description: User found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - User
+      operationId: deleteUser
+      summary: Delete user by email
+      parameters:
+        - name: email
+          in: path
+          required: true
+          description: User email
+          schema:
+            type: string
+            pattern: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+      responses:
+        '204':
+          description: User deleted successfully
         '500':
           description: Internal server error
           content:

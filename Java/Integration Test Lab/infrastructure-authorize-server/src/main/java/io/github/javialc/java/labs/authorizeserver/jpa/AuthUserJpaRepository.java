@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface AuthUserJpaRepository extends MongoRepository<AuthUserEntity, String> {
 
     Optional<AuthUserEntity> findByEmail(String email);
+
+    void deleteByEmail(String email);
 }

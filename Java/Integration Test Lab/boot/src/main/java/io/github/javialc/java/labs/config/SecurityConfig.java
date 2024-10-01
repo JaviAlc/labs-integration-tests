@@ -27,6 +27,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/authentication/**").permitAll() // Permitir acceso libre a la ruta de autenticación
                 .requestMatchers("/public/**").permitAll() // Permitir acceso libre a la ruta pública
+                .requestMatchers("/swagger-ui*/**").permitAll() // Permitir acceso libre a Swagger UI
+                .requestMatchers("/v3/api-docs/**").permitAll() // Permitir acceso libre a la documentación de la API
+                .requestMatchers("/actuator/**").permitAll() // Permitir acceso libre a Actuator
                 .anyRequest().authenticated()  // Todas las demás rutas requieren autenticación
             )
             .sessionManagement(session -> session

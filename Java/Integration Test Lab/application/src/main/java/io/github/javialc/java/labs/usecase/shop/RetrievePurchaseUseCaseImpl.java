@@ -1,4 +1,4 @@
-package io.github.javialc.java.labs.usecase;
+package io.github.javialc.java.labs.usecase.shop;
 
 import io.github.javialc.java.labs.domain.model.shop.Purchase;
 import io.github.javialc.java.labs.domain.repository.UserRepository;
@@ -21,9 +21,9 @@ public class RetrievePurchaseUseCaseImpl implements RetrievePurchaseUseCase {
         String email = authorizationServiceUtils.getCurrentUsername();
         log.info("Retrieving purchase for user {}", email);
         return userRepository.findByEmail(email).filter(user -> user.getPurchases() != null)
-                .map(user -> user.getPurchases().stream()
-                    .filter(purchase -> purchase.id().equals(id)).findFirst())
-                .flatMap(purchase -> purchase)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase not found"));
+            .map(user -> user.getPurchases().stream()
+                .filter(purchase -> purchase.id().equals(id)).findFirst())
+            .flatMap(purchase -> purchase)
+            .orElseThrow(() -> new IllegalArgumentException("Purchase not found"));
     }
 }

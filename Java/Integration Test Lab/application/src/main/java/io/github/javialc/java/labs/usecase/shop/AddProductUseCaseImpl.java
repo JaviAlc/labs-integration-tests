@@ -1,4 +1,4 @@
-package io.github.javialc.java.labs.usecase;
+package io.github.javialc.java.labs.usecase.shop;
 
 import io.github.javialc.java.labs.domain.model.shop.Bag;
 import io.github.javialc.java.labs.domain.model.shop.Product;
@@ -23,15 +23,15 @@ public class AddProductUseCaseImpl implements AddProductUseCase {
         String email = authorizationServiceUtils.getCurrentUsername();
         log.info("Adding product with name: {} for user with email: {}", product.name(), email);
         return userRepository.findByEmail(email).map(
-                user -> {
-                    user.getBag().addProduct(product);
-                    userRepository.save(user);
-                    return user.getBag();
-                }).orElseThrow(
-                () -> {
-                    log.error("User with email: {} not found", email);
-                    return new IllegalArgumentException("User not found");
-                }
+            user -> {
+                user.getBag().addProduct(product);
+                userRepository.save(user);
+                return user.getBag();
+            }).orElseThrow(
+            () -> {
+                log.error("User with email: {} not found", email);
+                return new IllegalArgumentException("User not found");
+            }
         );
 
 
