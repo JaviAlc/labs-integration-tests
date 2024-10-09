@@ -6,6 +6,8 @@ import io.github.javialc.java.labs.authorizeserver.jpa.AuthUserJpaRepository;
 import io.github.javialc.java.labs.mongodb.entity.UserEntity;
 import io.github.javialc.java.labs.mongodb.jpa.UserJpaRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,7 +37,8 @@ public abstract class BaseTestIT {
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().findAndRegisterModules();
 
     @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0").withStartupTimeout(Duration.ofMinutes(5));
+    @ClassRule
+    public static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0").withStartupTimeout(Duration.ofMinutes(5));
 
     @Autowired
     MockMvc mockMvc;

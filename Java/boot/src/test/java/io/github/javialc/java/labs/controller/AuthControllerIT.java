@@ -22,8 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthControllerIT extends BaseTestIT {
 
 
-    @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0").withStartupTimeout(Duration.ofMinutes(5));
+   // @Container
+    //static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0").withStartupTimeout(Duration.ofMinutes(5));
 
     @AfterAll
     static void tearDownAll() {

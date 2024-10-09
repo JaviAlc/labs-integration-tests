@@ -3,8 +3,10 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://admin:password@localhost:27117/integrationtest-db
-      database: integrationtest-db
+      #uri: mongodb://admin:password@localhost:27117/integrationtest-db
+      #database: integrationtest-db
+      uri: ${mongodb.uri}/${mongodb.database}
+      database: ${mongodb.database}
 server:
   port: 8180
 

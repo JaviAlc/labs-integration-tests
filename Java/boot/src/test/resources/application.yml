@@ -1,0 +1,16 @@
+
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:password@localhost:27117/integrationtest-db
+      database: integrationtest-db
+server:
+  port: 8180
+
+logging:
+  level:
+    root: INFO
+    io.github.javialc.java.labs: DEBUG
+
+
