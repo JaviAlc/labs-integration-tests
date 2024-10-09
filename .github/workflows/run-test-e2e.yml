@@ -28,6 +28,6 @@ jobs:
                 exit 1
             fi
         
-            newman run smoke-test.postman_collection.json -e "$env_value.postman_environment.json"
+            newman run Postman/smoke-test.postman_collection.json -e Postman/"$env_value.postman_environment.json"
             
             exit 1
