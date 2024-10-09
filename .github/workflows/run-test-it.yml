@@ -5,8 +5,8 @@ on:
     types: [created]
 
 jobs:
-  build:
-
+  run-java-test:
+    if: contains(github.event.comment.body, '/run-test-it')
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
-        
+
     - name: Build with Maven
       run: mvn -B package --file Java/pom.xml
 
