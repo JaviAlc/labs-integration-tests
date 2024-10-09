@@ -45,6 +45,17 @@ mvn clean install
 mvn spring-boot:run
 ```
 
+## Docker
+
+Generate image
+
+```shell
+  docker buildx build --platform=linux/amd64 -t javialc/lab-integration-tests-amd64 .
+  docker save javialc/lab-integration-tests-amd64:latest | gzip > lab-integration-tests-amd64.tar.gz
+  cp lab-integration-tests-amd64.tar.gz {{directoryToCopy}} # Optional
+```
+
+
 ### Integration tests
 
 We use JUnit 5 with TestContainers to run the integration tests.

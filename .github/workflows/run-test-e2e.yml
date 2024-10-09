@@ -1,0 +1,33 @@
+name: Newman Tests
+
+on:
+    issue_comment:
+      types: [created]
+
+jobs:
+    run-newman-tests:
+      if: contains(github.event.comment.body, '/run-newman')
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+  
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '14'
+  
+        - name: Install Newman
+          run: npm install -g newman
+  
+        - name: Run Newman tests with environment
+          run: |
+            env_value=$(echo "${{ github.event.comment.body }}" | grep -oP '(?<=-env )\w+')
+            if [ -z "$env_value" ]; then
+                echo "Environment not specified"
+                exit 1
+            fi
+        
+            newman run smoke-test.postman_collection.json -e "$env_value.postman_environment.json"
+            
+            exit 1
