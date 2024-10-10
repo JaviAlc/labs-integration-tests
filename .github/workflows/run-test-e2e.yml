@@ -14,7 +14,6 @@ jobs:
           with:
             fetch-depth: 0
             ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
-            # ref: ${{ github.event.pull_request.head.sha }}
   
         - name: Set up Node.js
           uses: actions/setup-node@v3
@@ -34,4 +33,4 @@ jobs:
         
             newman run Postman/smoke-test.postman_collection.json -e Postman/"$env_value.postman_environment.json"
             
-            exit 1
+            exit 0
