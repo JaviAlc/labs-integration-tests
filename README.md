@@ -90,5 +90,3 @@ npm install -g newman
 ```bash
 newman run Postman/smoke-test.postman_collection.json -e Postman/local-java.postman_environment.json
 ```
-
-
